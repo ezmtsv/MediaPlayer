@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activity.AppActivity">
+
+        <TextView
+            android:id="@+id/album"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/common_spacing"
+            android:layout_marginTop="@dimen/common_spacing"
+            android:text="@string/album_title"
+            android:textColor="@color/gray"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            />
+
+        <TextView
+            android:id="@+id/nameAlbum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/album"
+            app:layout_constraintTop_toBottomOf="@id/album"
+            tools:text="@tools:sample/lorem[2]" />
+
+        <TextView
+            android:id="@+id/singer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/authorMusic"
+            android:textColor="@color/gray"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/album"
+            app:layout_constraintTop_toBottomOf="@id/nameAlbum" />
+
+        <TextView
+            android:id="@+id/nameAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/common_spacing"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/singer"
+            app:layout_constraintTop_toBottomOf="@id/nameAlbum"
+            tools:text="@tools:sample/lorem[1]" />
+
+        <TextView
+            android:id="@+id/publish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/album"
+            app:layout_constraintTop_toBottomOf="@id/nameAuthor"
+            tools:text="@tools:sample/lorem[2]" />
+
+<!--        <ImageView-->
+<!--            android:id="@+id/iconPlay"-->
+<!--            android:layout_width="70dp"-->
+<!--            android:layout_height="70dp"-->
+<!--            android:background="@drawable/circle_black_24"-->
+<!--            android:src="@drawable/play_circle_24"-->
+<!--            app:layout_constraintStart_toStartOf="@id/album"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/publish" />-->
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/iconPlay"
+            style="@style/Widget.AppTheme.playButtonBig"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:checkable="true"
+            android:foreground="@drawable/selector_button_big"
+            app:layout_constraintStart_toStartOf="@id/album"
+            app:layout_constraintTop_toBottomOf="@id/publish" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrierHead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="iconPlay" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="@dimen/common_spacing"
+            app:layout_constraintTop_toBottomOf="@id/barrierHead"
+            app:layout_constraintVertical_bias="1.0"
+            tools:layout_editor_absoluteX="0dp"
+            tools:listitem="@layout/card_track" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

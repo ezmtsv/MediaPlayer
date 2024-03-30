@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MediaPlayer</string>
+    <string name="album_title">АЛЬБОМ</string>
+    <string name="authorMusic">Исполнитель</string>
+</resources>
