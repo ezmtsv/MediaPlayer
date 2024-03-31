@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.view.get
+import ru.netology.mediaplayer.activity.player.MPlayer
 import ru.netology.mediaplayer.adapter.AdapterHead
 import ru.netology.mediaplayer.adapter.OnIteractionListener
 import ru.netology.mediaplayer.adapter.AdapterTracks
@@ -14,14 +15,13 @@ import ru.netology.mediaplayer.dto.Track
 import ru.netology.mediaplayer.viewmodel.ViewModelTrack
 import java.io.IOException
 
-class AppActivity : AppCompatActivity() {
-    private var player: MediaPlayer? = null
-    private var lastTrack: Int = 0
+const val URL_LOAD_SONG =
+    "https://raw.githubusercontent.com/netology-code/andad-homeworks/master/09_multimedia/data/"
 
-    companion object {
-        private const val URL_LOAD_SONG =
-            "https://raw.githubusercontent.com/netology-code/andad-homeworks/master/09_multimedia/data/"
-    }
+
+class AppActivity : AppCompatActivity() {
+    private var lastTrack: Int = 0
+    private val pl = MPlayer()
 
     val viewModel: ViewModelTrack by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,10 +33,23 @@ class AppActivity : AppCompatActivity() {
         fun handleTrack(tr: Track) {
             if (!tr.playTrack) {
                 viewModel.play(tr.copy(playTrack = true))
-                play(tr.file)
+
+                pl.play(tr.file, object : MPlayer.GetInfo {
+                    override fun getDuration(dut: Int) {
+                        if (dut != 0) viewModel.timeTrack.value = dut
+                    }
+
+                    override fun onCompletionPlay() {
+                        viewModel.stopTrack(id = lastTrack)
+                        lastTrack = tr.id +1
+                        pl.stopPlayer()
+                        handleTrack(viewModel.getNextTrack(tr))
+                    }
+
+                })
             } else {
                 viewModel.play(tr.copy(playTrack = false))
-                pausePlayer()
+                pl.pausePlayer()
             }
         }
 
@@ -47,6 +60,7 @@ class AppActivity : AppCompatActivity() {
 
         })
 
+
         val adapter = AdapterTracks(object : OnIteractionListener {
             override fun play(track: Track) {
                 if (lastTrack == track.id) {
@@ -54,7 +68,7 @@ class AppActivity : AppCompatActivity() {
                 } else {
                     viewModel.stopTrack(id = lastTrack)
                     lastTrack = track.id
-                    stopPlayer()
+                    pl.stopPlayer()
                     handleTrack(track)
 
                 }
@@ -75,6 +89,7 @@ class AppActivity : AppCompatActivity() {
         viewModel.header.observe(this) {
             adapterHeader.bind(it)
             viewModel.updateTracks()
+            binding.swipeRefreshLayout.isRefreshing = false
         }
         viewModel.tracks.observe(this) { tr ->
             adapter.submitList(tr)
@@ -83,54 +98,26 @@ class AppActivity : AppCompatActivity() {
         viewModel.timeTrack.observe(this) {
             viewModel.setTimeTrack(it, lastTrack)
         }
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.getAlbum()
+        }
+        binding.swipeRefreshLayout.setColorSchemeResources(
+            android.R.color.holo_blue_bright,
+            android.R.color.holo_green_light,
+            android.R.color.holo_red_light,
+        )
         setContentView(binding.root)
     }
 
-    private fun play(link: String) {
-        try {
-            if (player == null) {
-                player = MediaPlayer().apply {
-                    this.setDataSource(
-                        "$URL_LOAD_SONG$link"
-                    )
-                    this.setOnPreparedListener {
-                        it.start()
-                        viewModel.timeTrack.value = it.duration
-                    }
-                    this.prepareAsync()
-                }
-            } else {
-                player?.start()
-            }
-
-        } catch (e: IOException) {
-            println(e)
-        }
-    }
-
-    private fun pausePlayer() {
-        try {
-            if (player?.isPlaying == true) player?.pause()
-        } catch (e: IOException) {
-            println(e)
-        }
-
-    }
-
-    private fun stopPlayer() {
-        try {
-            if (player != null) {
-                player!!.release()
-                player = null
-            }
-        } catch (e: IOException) {
-            println(e)
-        }
-
-    }
-
     override fun onStop() {
-        stopPlayer()
+        pl.stopPlayer()
         super.onStop()
     }
+
+    override fun onDestroy() {
+        pl.stopPlayer()
+        super.onDestroy()
+    }
+
 }

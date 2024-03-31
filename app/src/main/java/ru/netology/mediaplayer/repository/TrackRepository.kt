@@ -16,6 +16,8 @@ interface TrackRepository {
     fun likeTrack(id: Int, like: Boolean)
     fun blockTrack(id: Int, stop: Boolean)
 
+    fun nextTrack(track:Track): Track
+
     interface GetAllCallback {
         fun onSuccess(songs: Album)
         fun onError(e: Exception)
