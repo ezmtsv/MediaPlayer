@@ -30,7 +30,7 @@ class ViewModelTrack(
         repository.playTrack(track)
     }
 
-    private fun getAlbum() {
+    fun getAlbum() {
         repository.getAllSongs(object : TrackRepository.GetAllCallback {
             override fun onSuccess(songs: Album) {
                 _header.postValue(songs)
@@ -63,5 +63,9 @@ class ViewModelTrack(
 
     fun likeTrack(id: Int, like: Boolean) {
         repository.likeTrack(id, like)
+    }
+
+    fun getNextTrack(track: Track): Track {
+        return repository.nextTrack(track)
     }
 }

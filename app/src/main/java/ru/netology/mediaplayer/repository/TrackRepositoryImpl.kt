@@ -93,6 +93,8 @@ class TrackRepositoryImpl : TrackRepository {
             } else tr
         }
         data.value = tracks
+        album = album.copy(playTrackAlbum = false, tracks = tracks)
+        header.value = album
     }
 
     override fun likeTrack(id: Int, like: Boolean) {
@@ -116,4 +118,8 @@ class TrackRepositoryImpl : TrackRepository {
         album = album.copy(tracks = tracks)
         header.value = album
     }
+
+    override fun nextTrack(track: Track): Track =
+        tracks.elementAtOrElse(track.id) { getSong(1) }!!
+
 }
