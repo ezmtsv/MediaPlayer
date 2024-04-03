@@ -10,6 +10,7 @@
         android:layout_height="match_parent"
         tools:context=".activity.AppActivity">
 
+
         <TextView
             android:id="@+id/album"
             android:layout_width="wrap_content"
@@ -68,7 +69,6 @@
             app:layout_constraintTop_toBottomOf="@id/nameAuthor"
             tools:text="@tools:sample/lorem[2]" />
 
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/iconPlay"
             style="@style/Widget.AppTheme.playButtonBig"
@@ -79,7 +79,6 @@
             app:layout_constraintStart_toStartOf="@id/album"
             app:layout_constraintTop_toBottomOf="@id/publish" />
 
-
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrierHead"
             android:layout_width="wrap_content"
@@ -87,27 +86,32 @@
             app:barrierDirection="bottom"
             app:constraint_referenced_ids="iconPlay" />
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/swipeRefreshLayout"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/layContainer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="@dimen/common_spacing"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/barrierHead">
 
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/list"
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/swipeRefreshLayout"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="@dimen/common_spacing"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/barrierHead"
-                app:layout_constraintVertical_bias="1.0"
-                tools:layout_editor_absoluteX="0dp"
-                android:scrollbars="vertical"
-                tools:listitem="@layout/card_track" />
+                android:layout_height="match_parent">
 
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/layContainer"
+                    app:layout_constraintVertical_bias="1.0"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:listitem="@layout/card_track" />
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
